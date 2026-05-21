@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Portfólio | Davi Ramos</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+:root{
+--accent:#c6ff00;
+--bg:#080808;
+--card:#0f0f0f;
+--border:#1e1e1e;
+}
+
+body{
+font-family:'DM Sans',sans-serif;
+background:var(--bg);
+color:white;
+overflow-x:hidden;
+}
+
+/* NOISE OVERLAY */
+body::before{
+content:'';
+position:fixed;
+inset:0;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+pointer-events:none;
+z-index:1;
+opacity:.5;
+}
+
+/* HEADER */
+header{
+text-align:center;
+padding:120px 20px 80px;
+position:relative;
+overflow:hidden;
+}
+
+.header-glow{
+position:absolute;
+width:600px;
+height:600px;
+background:radial-gradient(circle, rgba(198,255,0,.08) 0%, transparent 70%);
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+pointer-events:none;
+animation:pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow{
+0%,100%{ transform:translate(-50%,-50%) scale(1); opacity:1; }
+50%{ transform:translate(-50%,-50%) scale(1.15); opacity:.6; }
+}
+
+.header-line{
+display:inline-block;
+overflow:hidden;
+}
+
+header h1{
+font-family:'Syne',sans-serif;
+font-size:clamp(36px,6vw,68px);
+font-weight:800;
+line-height:1.1;
+letter-spacing:-2px;
+}
+
+.word{
+display:inline-block;
+opacity:0;
+transform:translateY(60px) rotate(3deg);
+animation:word-in .7s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+.word:nth-child(1){ animation-delay:.1s; }
+.word:nth-child(2){ animation-delay:.25s; }
+.word:nth-child(3){ animation-delay:.4s; }
+.word:nth-child(4){ animation-delay:.55s; }
+
+@keyframes word-in{
+to{ opacity:1; transform:translateY(0) rotate(0); }
+}
+
+header span{
+color:var(--accent);
+position:relative;
+}
+
+header span::after{
+content:'';
+position:absolute;
+bottom:-4px;
+left:0;
+width:0;
+height:2px;
+background:var(--accent);
+animation:underline-in .6s .9s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+@keyframes underline-in{
+to{ width:100%; }
+}
+
+.header-sub{
+color:#555;
+margin-top:16px;
+font-size:15px;
+letter-spacing:.5px;
+opacity:0;
+transform:translateY(20px);
+animation:fade-up .6s 1s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+.header-badge{
+display:inline-flex;
+align-items:center;
+gap:8px;
+border:1px solid #222;
+border-radius:100px;
+padding:6px 16px;
+font-size:12px;
+color:#555;
+margin-bottom:24px;
+opacity:0;
+animation:fade-up .5s .05s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+.header-badge span{
+width:6px;
+height:6px;
+background:var(--accent);
+border-radius:50%;
+animation:blink 1.5s infinite;
+}
+
+@keyframes blink{
+0%,100%{ opacity:1; }
+50%{ opacity:.2; }
+}
+
+/* SECTION LABEL */
+.section-label{
+max-width:1200px;
+margin:0 auto;
+padding:0 20px;
+display:flex;
+align-items:center;
+gap:16px;
+color:#333;
+font-size:12px;
+letter-spacing:3px;
+text-transform:uppercase;
+margin-bottom:32px;
+}
+
+.section-label::after{
+content:'';
+flex:1;
+height:1px;
+background:linear-gradient(90deg,#222,transparent);
+}
+
+/* GRID */
+.grid{
+max-width:1200px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+padding:0 20px 80px;
+}
+
+/* CARD */
+.card{
+background:var(--card);
+border-radius:16px;
+overflow:hidden;
+cursor:pointer;
+border:1px solid var(--border);
+transition:border-color .4s,box-shadow .4s;
+position:relative;
+opacity:0;
+transform:translateY(50px);
+}
+
+.card.visible{
+animation:card-in .7s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+@keyframes card-in{
+to{ opacity:1; transform:translateY(0); }
+}
+
+.card::before{
+content:'';
+position:absolute;
+inset:0;
+border-radius:16px;
+background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(198,255,0,.05) 0%, transparent 60%);
+opacity:0;
+transition:opacity .4s;
+pointer-events:none;
+z-index:1;
+}
+
+.card:hover{
+border-color:#333;
+box-shadow:0 30px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(198,255,0,.07);
+}
+
+.card:hover::before{
+opacity:1;
+}
+
+/* PREVIEW */
+.preview{
+height:200px;
+overflow:hidden;
+background:#111;
+position:relative;
+}
+
+.preview::after{
+content:'';
+position:absolute;
+inset:0;
+background:linear-gradient(to bottom, transparent 60%, var(--card) 100%);
+z-index:2;
+pointer-events:none;
+}
+
+.preview iframe{
+width:1200px;
+height:800px;
+transform:scale(.23);
+transform-origin:top left;
+border:none;
+pointer-events:none;
+transition:transform .6s cubic-bezier(.16,1,.3,1);
+}
+
+.card:hover .preview iframe{
+transform:scale(.23) translateY(-20px);
+}
+
+/* HOVER REVEAL */
+.card-overlay{
+position:absolute;
+inset:0;
+background:rgba(0,0,0,.7);
+display:flex;
+align-items:center;
+justify-content:center;
+opacity:0;
+transition:opacity .3s;
+z-index:3;
+backdrop-filter:blur(4px);
+}
+
+.card:hover .card-overlay{
+opacity:1;
+}
+
+.card-overlay-btn{
+border:1px solid var(--accent);
+color:var(--accent);
+font-family:'Syne',sans-serif;
+font-weight:700;
+font-size:13px;
+letter-spacing:2px;
+padding:10px 24px;
+text-transform:uppercase;
+background:transparent;
+cursor:none;
+transition:background .2s,color .2s;
+transform:translateY(8px);
+transition:transform .3s cubic-bezier(.16,1,.3,1), background .2s, color .2s, opacity .3s;
+opacity:0;
+}
+
+.card:hover .card-overlay-btn{
+transform:translateY(0);
+opacity:1;
+}
+
+.card-overlay-btn:hover{
+background:var(--accent);
+color:#000;
+}
+
+/* CONTENT */
+.content{
+padding:20px 22px 22px;
+position:relative;
+z-index:2;
+}
+
+.content-tag{
+font-size:10px;
+letter-spacing:2px;
+color:var(--accent);
+text-transform:uppercase;
+margin-bottom:8px;
+display:block;
+}
+
+.content h3{
+font-family:'Syne',sans-serif;
+font-size:18px;
+font-weight:700;
+margin-bottom:8px;
+transition:color .3s;
+}
+
+.card:hover .content h3{
+color:var(--accent);
+}
+
+.content p{
+font-size:13px;
+color:#555;
+line-height:1.7;
+}
+
+/* MODAL */
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.97);
+display:flex;
+flex-direction:column;
+z-index:1000;
+opacity:0;
+pointer-events:none;
+transition:opacity .4s cubic-bezier(.16,1,.3,1);
+}
+
+.modal.active{
+opacity:1;
+pointer-events:all;
+}
+
+.modal-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 24px;
+background:#0c0c0c;
+border-bottom:1px solid #1a1a1a;
+transform:translateY(-100%);
+transition:transform .4s .1s cubic-bezier(.16,1,.3,1);
+}
+
+.modal.active .modal-top{
+transform:translateY(0);
+}
+
+.modal-title{
+font-family:'Syne',sans-serif;
+font-size:14px;
+font-weight:700;
+letter-spacing:1px;
+color:#666;
+}
+
+.modal-actions{
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.modal-top button{
+background:var(--accent);
+border:none;
+padding:8px 18px;
+cursor:pointer;
+font-weight:700;
+font-family:'Syne',sans-serif;
+font-size:12px;
+letter-spacing:1px;
+text-transform:uppercase;
+border-radius:4px;
+transition:transform .15s, box-shadow .15s;
+}
+
+.modal-top button:hover{
+transform:translateY(-1px);
+box-shadow:0 6px 20px rgba(198,255,0,.3);
+}
+
+.close{
+background:none;
+border:1px solid #333;
+color:#666;
+font-size:18px;
+cursor:pointer;
+width:36px;
+height:36px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+transition:border-color .2s,color .2s,transform .2s;
+}
+
+.close:hover{
+border-color:#666;
+color:white;
+transform:rotate(90deg);
+}
+
+iframe.modal-frame{
+flex:1;
+border:none;
+background:white;
+transform:scale(.97);
+opacity:0;
+transition:transform .5s .2s cubic-bezier(.16,1,.3,1), opacity .4s .2s;
+}
+
+.modal.active iframe.modal-frame{
+transform:scale(1);
+opacity:1;
+}
+
+/* FOOTER */
+footer{
+text-align:center;
+padding:60px 20px;
+color:#2a2a2a;
+font-size:13px;
+letter-spacing:.5px;
+border-top:1px solid #111;
+position:relative;
+}
+
+footer::before{
+content:'';
+position:absolute;
+top:0;
+left:50%;
+transform:translateX(-50%);
+width:1px;
+height:40px;
+background:linear-gradient(to bottom, var(--accent), transparent);
+top:-40px;
+}
+
+footer strong{
+color:#444;
+}
+
+/* SCROLL PROGRESS */
+.scroll-progress{
+position:fixed;
+top:0;
+left:0;
+height:2px;
+background:var(--accent);
+z-index:9000;
+width:0%;
+transition:width .1s;
+box-shadow:0 0 8px var(--accent);
+}
+
+/* STAGGER DELAYS */
+.card:nth-child(1){ animation-delay:.05s; }
+.card:nth-child(2){ animation-delay:.15s; }
+.card:nth-child(3){ animation-delay:.25s; }
+.card:nth-child(4){ animation-delay:.35s; }
+.card:nth-child(5){ animation-delay:.45s; }
+.card:nth-child(6){ animation-delay:.55s; }
+.card:nth-child(7){ animation-delay:.65s; }
+
+@keyframes fade-up{
+to{ opacity:1; transform:translateY(0); }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="follower"></div>
+<div class="scroll-progress" id="progress"></div>
+
+<header>
+
+<div class="header-glow"></div>
+
+<div class="header-badge">
+<span></span>
+Disponível para projetos · 2026
+</div>
+
+<h1>
+<span class="word">Olá,</span>&nbsp;
+<span class="word">sou</span>&nbsp;
+<span class="word">Davi</span>&nbsp;
+<span class="word"><span>Ramos</span></span>
+</h1>
+
+<p class="header-sub">Transformo ideias em experiências digitais que encantam e convertem</p>
+
+</header>
+
+<div class="section-label">Projetos selecionados</div>
+
+<div class="grid">
+
+<!-- PROJETO 1 -->
+<div class="card" onclick="openProject('fashion-store.html','Fashion Store')">
+<div class="preview">
+<iframe src="fashion-store.html"></iframe>
+<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+</div>
+<div class="content">
+<span class="content-tag">E-commerce</span>
+<h3>Fashion Store</h3>
+<p>E-commerce completo com catálogo de produtos, carrinho de compras e checkout otimizado para conversão.</p>
+</div>
+</div>
+
+<!-- PROJETO 2 -->
+<div class="card" onclick="openProject('nexus-developers.html','Nexus Developers')">
+<div class="preview">
+<iframe src="nexus-developers.html"></iframe>
+<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+</div>
+<div class="content">
+<span class="content-tag">Institucional</span>
+<h3>Nexus Developers</h3>
+<p>Site institucional para empresa de tecnologia, com apresentação de serviços, equipe e cases de sucesso.</p>
+</div>
+</div>
+
+<!-- PROJETO 3 -->
+<div class="card" onclick="openProject('digital-boost.html','Digital Boost')">
+<div class="preview">
+<iframe src="digital-boost.html"></iframe>
+<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+</div>
+<div class="content">
+<span class="content-tag">Landing Page</span>
+<h3>Digital Boost</h3>
+<p>Landing page de alta conversão para agência de marketing digital, com seções de prova social e CTA estratégico.</p>
+</div>
+</div>
+
+<!-- PROJETO 4 -->
+<div class="card" onclick="openProject('mega-vendas.html','Mega Vendas')">
+<div class="preview">
+<iframe src="mega-vendas.html"></iframe>
+<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+</div>
+<div class="content">
+<span class="content-tag">Marketplace</span>
+<h3>Mega Vendas</h3>
+<p>Marketplace com múltiplas categorias, sistema de busca, filtros avançados e área do vendedor.</p>
+</div>
+</div>
+
+<!-- PROJETO 5 -->
+<div class="card" onclick="openProject('barbearia.html','Barbearia')">
+<div class="preview">
+<iframe src="barbearia.html"></iframe>
+<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+</div>
+<div class="content">
+<span class="content-tag">Local</span>
+<h3>Barbearia</h3>
+<p>Site para barbearia com agendamento online, galeria de cortes, apresentação dos profissionais e avaliações de clientes.</p>
+</div>
+</div>
+
+<!-- PROJETO 6 -->
+<div class="card" onclick="openProject('mercadinho.html','Mercadinho')">
+<div class="preview">
+<iframe src="mercadinho.html"></iframe>
+<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+</div>
+<div class="content">
+<span class="content-tag">Delivery</span>
+<h3>Mercadinho</h3>
+<p>Loja virtual para mercado de bairro com cardápio digital, pedidos por WhatsApp e promoções em destaque.</p>
+</div>
+</div>
+
+<!-- PROJETO 7 -->
+<div class="card" onclick="openProject('pizzaria.html','Pizzaria')">
+<div class="preview">
+<iframe src="pizzaria.html"></iframe>
+<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+</div>
+<div class="content">
+<span class="content-tag">Delivery</span>
+<h3>Pizzaria</h3>
+<p>Cardápio digital interativo com montagem de pedidos, escolha de sabores e integração para delivery.</p>
+</div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+<div class="modal-top">
+<span class="modal-title" id="modal-title">—</span>
+<div class="modal-actions">
+<button onclick="openNew()">↗ Abrir site</button>
+<button class="close" onclick="closeModal()">✕</button>
+</div>
+</div>
+<iframe class="modal-frame" id="frame"></iframe>
+</div>
+
+<footer>
+© 2026 <strong>Davi Ramos</strong> — Desenvolvido com dedicação e atenção aos detalhes ✦
+</footer>
+
+<script>
+
+/* CURSOR */
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('follower');
+let fx = 0, fy = 0, cx = 0, cy = 0;
+
+document.addEventListener('mousemove', e => {
+  cx = e.clientX; cy = e.clientY;
+  cursor.style.left = cx + 'px';
+  cursor.style.top = cy + 'px';
+});
+
+(function animFollower(){
+  fx += (cx - fx) * .12;
+  fy += (cy - fy) * .12;
+  follower.style.left = fx + 'px';
+  follower.style.top = fy + 'px';
+  requestAnimationFrame(animFollower);
+})();
+
+/* SCROLL PROGRESS */
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+/* CARD MOUSE GLOW */
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+    const y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
+    card.style.setProperty('--mx', x + '%');
+    card.style.setProperty('--my', y + '%');
+  });
+});
+
+/* SCROLL REVEAL com stagger */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if(entry.isIntersecting){
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, entry.target.dataset.delay || 0);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card').forEach((el, i) => {
+  el.dataset.delay = i * 80;
+  observer.observe(el);
+});
+
+/* MODAL */
+let current = '';
+
+function openProject(url, title){
+  current = url;
+  document.getElementById('frame').src = url;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  const modal = document.getElementById('modal');
+  modal.classList.remove('active');
+  setTimeout(() => {
+    document.getElementById('frame').src = '';
+  }, 400);
+  document.body.style.overflow = '';
+}
+
+function openNew(){
+  window.open(current);
+}
+
+/* ESC fecha modal */
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeModal();
+});
+
+</script>
+
+</body>
+</html>
