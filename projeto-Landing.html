@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -31,7 +32,8 @@ color:white;
 overflow-x:hidden;
 }
 
-/* NOISE OVERLAY */
+/* NOISE OVERLAY — desativado em mobile para performance */
+@media (min-width:769px){
 body::before{
 content:'';
 position:fixed;
@@ -40,6 +42,48 @@ background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='htt
 pointer-events:none;
 z-index:1;
 opacity:.5;
+}
+}
+
+/* BOTÃO VOLTAR */
+.back-btn{
+position:fixed;
+top:16px;
+left:16px;
+z-index:9999;
+display:inline-flex;
+align-items:center;
+gap:8px;
+background:#111;
+border:1px solid #222;
+color:#888;
+font-family:'Syne',sans-serif;
+font-size:12px;
+font-weight:700;
+letter-spacing:1px;
+text-transform:uppercase;
+padding:8px 16px;
+border-radius:100px;
+text-decoration:none;
+transition:border-color .2s,color .2s,background .2s;
+}
+.back-btn:hover{
+border-color:var(--accent);
+color:var(--accent);
+background:#111;
+}
+.back-btn svg{
+width:14px;
+height:14px;
+fill:none;
+stroke:currentColor;
+stroke-width:2;
+stroke-linecap:round;
+stroke-linejoin:round;
+transition:transform .2s;
+}
+.back-btn:hover svg{
+transform:translateX(-3px);
 }
 
 /* HEADER */
@@ -67,11 +111,6 @@ animation:pulse-glow 4s ease-in-out infinite;
 50%{ transform:translate(-50%,-50%) scale(1.15); opacity:.6; }
 }
 
-.header-line{
-display:inline-block;
-overflow:hidden;
-}
-
 header h1{
 font-family:'Syne',sans-serif;
 font-size:clamp(36px,6vw,68px);
@@ -96,12 +135,12 @@ animation:word-in .7s cubic-bezier(.16,1,.3,1) forwards;
 to{ opacity:1; transform:translateY(0) rotate(0); }
 }
 
-header span{
+header span.accent{
 color:var(--accent);
 position:relative;
 }
 
-header span::after{
+header span.accent::after{
 content:'';
 position:absolute;
 bottom:-4px;
@@ -140,7 +179,7 @@ opacity:0;
 animation:fade-up .5s .05s cubic-bezier(.16,1,.3,1) forwards;
 }
 
-.header-badge span{
+.header-badge .dot{
 width:6px;
 height:6px;
 background:var(--accent);
@@ -227,36 +266,71 @@ box-shadow:0 30px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(198,255,0,.07);
 opacity:1;
 }
 
-/* PREVIEW */
+/* PREVIEW — placeholder estático, sem iframes */
 .preview{
 height:200px;
 overflow:hidden;
 background:#111;
 position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
-.preview::after{
+.preview-placeholder{
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:12px;
+position:relative;
+overflow:hidden;
+}
+
+/* Grade de linhas decorativas no fundo do preview */
+.preview-placeholder::before{
+content:'';
+position:absolute;
+inset:0;
+background-image:
+  linear-gradient(rgba(198,255,0,.04) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(198,255,0,.04) 1px, transparent 1px);
+background-size:32px 32px;
+}
+
+.preview-placeholder::after{
 content:'';
 position:absolute;
 inset:0;
 background:linear-gradient(to bottom, transparent 60%, var(--card) 100%);
 z-index:2;
-pointer-events:none;
 }
 
-.preview iframe{
-width:1200px;
-height:800px;
-transform:scale(.23);
-transform-origin:top left;
-border:none;
-pointer-events:none;
-transition:transform .6s cubic-bezier(.16,1,.3,1);
+.preview-icon{
+font-size:32px;
+z-index:3;
 }
 
-.card:hover .preview iframe{
-transform:scale(.23) translateY(-20px);
+.preview-tag{
+font-family:'Syne',sans-serif;
+font-size:11px;
+font-weight:700;
+letter-spacing:3px;
+text-transform:uppercase;
+color:#333;
+z-index:3;
 }
+
+/* Cores únicas por projeto */
+.card:nth-child(1) .preview-placeholder{ background:linear-gradient(135deg,#0d0d0d,#1a0a0a); }
+.card:nth-child(2) .preview-placeholder{ background:linear-gradient(135deg,#0d0d0d,#0a0a1a); }
+.card:nth-child(3) .preview-placeholder{ background:linear-gradient(135deg,#0d0d0d,#0a1a0a); }
+.card:nth-child(4) .preview-placeholder{ background:linear-gradient(135deg,#0d0d0d,#1a0f00); }
+.card:nth-child(5) .preview-placeholder{ background:linear-gradient(135deg,#0d0d0d,#1a1500); }
+.card:nth-child(6) .preview-placeholder{ background:linear-gradient(135deg,#0d0d0d,#001a10); }
+.card:nth-child(7) .preview-placeholder{ background:linear-gradient(135deg,#0d0d0d,#1a0a08); }
 
 /* HOVER REVEAL */
 .card-overlay{
@@ -276,6 +350,15 @@ backdrop-filter:blur(4px);
 opacity:1;
 }
 
+/* Em mobile, mostra o botão direto (sem hover) */
+@media (hover:none){
+.card-overlay{
+opacity:1;
+background:rgba(0,0,0,.45);
+backdrop-filter:none;
+}
+}
+
 .card-overlay-btn{
 border:1px solid var(--accent);
 color:var(--accent);
@@ -286,11 +369,11 @@ letter-spacing:2px;
 padding:10px 24px;
 text-transform:uppercase;
 background:transparent;
-cursor:none;
-transition:background .2s,color .2s;
+cursor:pointer;
+transition:transform .3s cubic-bezier(.16,1,.3,1), background .2s, color .2s;
 transform:translateY(8px);
-transition:transform .3s cubic-bezier(.16,1,.3,1), background .2s, color .2s, opacity .3s;
 opacity:0;
+border-radius:4px;
 }
 
 .card:hover .card-overlay-btn{
@@ -298,7 +381,14 @@ transform:translateY(0);
 opacity:1;
 }
 
-.card-overlay-btn:hover{
+@media (hover:none){
+.card-overlay-btn{
+transform:translateY(0);
+opacity:1;
+}
+}
+
+.card-overlay-btn:hover, .card-overlay-btn:active{
 background:var(--accent);
 color:#000;
 }
@@ -364,6 +454,7 @@ background:#0c0c0c;
 border-bottom:1px solid #1a1a1a;
 transform:translateY(-100%);
 transition:transform .4s .1s cubic-bezier(.16,1,.3,1);
+flex-shrink:0;
 }
 
 .modal.active .modal-top{
@@ -424,8 +515,54 @@ color:white;
 transform:rotate(90deg);
 }
 
-iframe.modal-frame{
+/* Loading state do iframe no modal */
+.modal-iframe-wrap{
 flex:1;
+position:relative;
+background:#0a0a0a;
+}
+
+.modal-loading{
+position:absolute;
+inset:0;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:12px;
+color:#333;
+font-size:13px;
+letter-spacing:2px;
+font-family:'Syne',sans-serif;
+}
+
+.modal-loading-bar{
+width:120px;
+height:2px;
+background:#1a1a1a;
+border-radius:2px;
+overflow:hidden;
+}
+
+.modal-loading-bar::after{
+content:'';
+display:block;
+width:40%;
+height:100%;
+background:var(--accent);
+animation:loading-slide 1s ease-in-out infinite;
+}
+
+@keyframes loading-slide{
+0%{ transform:translateX(-100%); }
+100%{ transform:translateX(350%); }
+}
+
+iframe.modal-frame{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
 border:none;
 background:white;
 transform:scale(.97);
@@ -433,7 +570,7 @@ opacity:0;
 transition:transform .5s .2s cubic-bezier(.16,1,.3,1), opacity .4s .2s;
 }
 
-.modal.active iframe.modal-frame{
+.modal.active iframe.modal-frame.loaded{
 transform:scale(1);
 opacity:1;
 }
@@ -491,22 +628,53 @@ box-shadow:0 0 8px var(--accent);
 to{ opacity:1; transform:translateY(0); }
 }
 
+/* Cursor customizado apenas desktop */
+@media (pointer:fine){
+  body{ cursor:none; }
+  .cursor{
+    width:8px;height:8px;
+    background:var(--accent);
+    border-radius:50%;
+    position:fixed;
+    pointer-events:none;
+    z-index:9999;
+    transform:translate(-50%,-50%);
+    transition:transform .1s;
+  }
+  .cursor-follower{
+    width:28px;height:28px;
+    border:1px solid rgba(198,255,0,.4);
+    border-radius:50%;
+    position:fixed;
+    pointer-events:none;
+    z-index:9998;
+    transform:translate(-50%,-50%);
+  }
+}
+
 </style>
 
 </head>
 
 <body>
 
+<!-- CURSOR (só aparece em desktop via CSS) -->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-follower" id="follower"></div>
 <div class="scroll-progress" id="progress"></div>
+
+<!-- BOTÃO VOLTAR -->
+<a href="index.html" class="back-btn" aria-label="Voltar para o início">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  Voltar
+</a>
 
 <header>
 
 <div class="header-glow"></div>
 
 <div class="header-badge">
-<span></span>
+<span class="dot"></span>
 Disponível para projetos · 2026
 </div>
 
@@ -514,7 +682,7 @@ Disponível para projetos · 2026
 <span class="word">Olá,</span>&nbsp;
 <span class="word">sou</span>&nbsp;
 <span class="word">Davi</span>&nbsp;
-<span class="word"><span>Ramos</span></span>
+<span class="word"><span class="accent">Ramos</span></span>
 </h1>
 
 <p class="header-sub">Transformo ideias em experiências digitais que encantam e convertem</p>
@@ -528,8 +696,11 @@ Disponível para projetos · 2026
 <!-- PROJETO 1 -->
 <div class="card" onclick="openProject('fashion-store.html','Fashion Store')">
 <div class="preview">
-<iframe src="fashion-store.html"></iframe>
-<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+  <div class="preview-placeholder">
+    <span class="preview-icon">🛍️</span>
+    <span class="preview-tag">Fashion Store</span>
+  </div>
+  <div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
 </div>
 <div class="content">
 <span class="content-tag">E-commerce</span>
@@ -541,8 +712,11 @@ Disponível para projetos · 2026
 <!-- PROJETO 2 -->
 <div class="card" onclick="openProject('nexus-developers.html','Nexus Developers')">
 <div class="preview">
-<iframe src="nexus-developers.html"></iframe>
-<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+  <div class="preview-placeholder">
+    <span class="preview-icon">💻</span>
+    <span class="preview-tag">Nexus Developers</span>
+  </div>
+  <div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
 </div>
 <div class="content">
 <span class="content-tag">Institucional</span>
@@ -554,8 +728,11 @@ Disponível para projetos · 2026
 <!-- PROJETO 3 -->
 <div class="card" onclick="openProject('digital-boost.html','Digital Boost')">
 <div class="preview">
-<iframe src="digital-boost.html"></iframe>
-<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+  <div class="preview-placeholder">
+    <span class="preview-icon">🚀</span>
+    <span class="preview-tag">Digital Boost</span>
+  </div>
+  <div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
 </div>
 <div class="content">
 <span class="content-tag">Landing Page</span>
@@ -567,8 +744,11 @@ Disponível para projetos · 2026
 <!-- PROJETO 4 -->
 <div class="card" onclick="openProject('mega-vendas.html','Mega Vendas')">
 <div class="preview">
-<iframe src="mega-vendas.html"></iframe>
-<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+  <div class="preview-placeholder">
+    <span class="preview-icon">🏪</span>
+    <span class="preview-tag">Mega Vendas</span>
+  </div>
+  <div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
 </div>
 <div class="content">
 <span class="content-tag">Marketplace</span>
@@ -580,8 +760,11 @@ Disponível para projetos · 2026
 <!-- PROJETO 5 -->
 <div class="card" onclick="openProject('barbearia.html','Barbearia')">
 <div class="preview">
-<iframe src="barbearia.html"></iframe>
-<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+  <div class="preview-placeholder">
+    <span class="preview-icon">✂️</span>
+    <span class="preview-tag">Barbearia</span>
+  </div>
+  <div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
 </div>
 <div class="content">
 <span class="content-tag">Local</span>
@@ -593,8 +776,11 @@ Disponível para projetos · 2026
 <!-- PROJETO 6 -->
 <div class="card" onclick="openProject('mercadinho.html','Mercadinho')">
 <div class="preview">
-<iframe src="mercadinho.html"></iframe>
-<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+  <div class="preview-placeholder">
+    <span class="preview-icon">🛒</span>
+    <span class="preview-tag">Mercadinho</span>
+  </div>
+  <div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
 </div>
 <div class="content">
 <span class="content-tag">Delivery</span>
@@ -606,8 +792,11 @@ Disponível para projetos · 2026
 <!-- PROJETO 7 -->
 <div class="card" onclick="openProject('pizzaria.html','Pizzaria')">
 <div class="preview">
-<iframe src="pizzaria.html"></iframe>
-<div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
+  <div class="preview-placeholder">
+    <span class="preview-icon">🍕</span>
+    <span class="preview-tag">Pizzaria</span>
+  </div>
+  <div class="card-overlay"><button class="card-overlay-btn">Ver projeto</button></div>
 </div>
 <div class="content">
 <span class="content-tag">Delivery</span>
@@ -627,7 +816,13 @@ Disponível para projetos · 2026
 <button class="close" onclick="closeModal()">✕</button>
 </div>
 </div>
-<iframe class="modal-frame" id="frame"></iframe>
+<div class="modal-iframe-wrap">
+  <div class="modal-loading" id="modal-loading">
+    <div class="modal-loading-bar"></div>
+    Carregando…
+  </div>
+  <iframe class="modal-frame" id="frame"></iframe>
+</div>
 </div>
 
 <footer>
@@ -636,45 +831,51 @@ Disponível para projetos · 2026
 
 <script>
 
-/* CURSOR */
-const cursor = document.getElementById('cursor');
-const follower = document.getElementById('follower');
-let fx = 0, fy = 0, cx = 0, cy = 0;
+/* CURSOR — só desktop (pointer:fine) */
+const isDesktop = window.matchMedia('(pointer:fine)').matches;
 
-document.addEventListener('mousemove', e => {
-  cx = e.clientX; cy = e.clientY;
-  cursor.style.left = cx + 'px';
-  cursor.style.top = cy + 'px';
-});
+if(isDesktop){
+  const cursor = document.getElementById('cursor');
+  const follower = document.getElementById('follower');
+  let fx = 0, fy = 0, cx = 0, cy = 0;
 
-(function animFollower(){
-  fx += (cx - fx) * .12;
-  fy += (cy - fy) * .12;
-  follower.style.left = fx + 'px';
-  follower.style.top = fy + 'px';
-  requestAnimationFrame(animFollower);
-})();
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX; cy = e.clientY;
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+  });
+
+  (function animFollower(){
+    fx += (cx - fx) * .12;
+    fy += (cy - fy) * .12;
+    follower.style.left = fx + 'px';
+    follower.style.top = fy + 'px';
+    requestAnimationFrame(animFollower);
+  })();
+}
 
 /* SCROLL PROGRESS */
 window.addEventListener('scroll', () => {
   const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
   document.getElementById('progress').style.width = pct + '%';
-});
+}, { passive: true });
 
-/* CARD MOUSE GLOW */
-document.querySelectorAll('.card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
-    const y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
-    card.style.setProperty('--mx', x + '%');
-    card.style.setProperty('--my', y + '%');
+/* CARD MOUSE GLOW — só desktop */
+if(isDesktop){
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+      const y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
+      card.style.setProperty('--mx', x + '%');
+      card.style.setProperty('--my', y + '%');
+    });
   });
-});
+}
 
-/* SCROLL REVEAL com stagger */
+/* SCROLL REVEAL */
 const observer = new IntersectionObserver(entries => {
-  entries.forEach((entry, i) => {
+  entries.forEach(entry => {
     if(entry.isIntersecting){
       setTimeout(() => {
         entry.target.classList.add('visible');
@@ -694,17 +895,36 @@ let current = '';
 
 function openProject(url, title){
   current = url;
-  document.getElementById('frame').src = url;
+  const frame = document.getElementById('frame');
+  const loading = document.getElementById('modal-loading');
+
+  // Mostra loading, esconde iframe
+  loading.style.display = 'flex';
+  frame.classList.remove('loaded');
+  frame.src = '';
+
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal').classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  // Pequeno delay para a animação de abertura acontecer antes de carregar
+  setTimeout(() => {
+    frame.src = url;
+  }, 200);
 }
+
+document.getElementById('frame').addEventListener('load', function(){
+  document.getElementById('modal-loading').style.display = 'none';
+  this.classList.add('loaded');
+});
 
 function closeModal(){
   const modal = document.getElementById('modal');
   modal.classList.remove('active');
   setTimeout(() => {
-    document.getElementById('frame').src = '';
+    const frame = document.getElementById('frame');
+    frame.src = '';
+    frame.classList.remove('loaded');
   }, 400);
   document.body.style.overflow = '';
 }
